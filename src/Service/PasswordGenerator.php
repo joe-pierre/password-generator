@@ -5,6 +5,7 @@ class PasswordGenerator
 {
     public function generate(int $length, bool $uppercaseLetters = false, bool $digits = false, bool $specialCharacters = false): string
     {
+        // Define alphabet
         $lowercaseLettersAlphabet = range("a", "z") ;
         $uppercaseLettersAlphabet = range("A", "Z");
         $digitsAlphabet = range(0, 9);
@@ -15,17 +16,24 @@ class PasswordGenerator
             range('{', '~')
         );
         
+        // Final alphabet default to all lowercase letters alphabet
         $finalAlphabet = [$lowercaseLettersAlphabet];
 
-        // Add lowercase letter chosed randomly
+        // Start by adding a random lowercase letter
         $password = [$this->pickRandomItemFromAlphabet($lowercaseLettersAlphabet)];
 
+        // Map constraints to associated alphabets
         $constraintsMapping = [
             [$uppercaseLetters, $uppercaseLettersAlphabet],
             [$digits, $digitsAlphabet],
             [$specialCharacters, $specialCharactersAlphabet],
         ];
 
+        // We make sure that the final password contains at list
+        // one {uppercase letter and/or digit and/or special character}
+        // base on user's requested constraints.
+        // We also grow at the same time the final alphabet
+        // with the alphabet  of the requested constraint(s).
         foreach ($constraintsMapping as [$constraintEnabled, $constraintAlphabet]) {
             if ($constraintEnabled) {
                 $finalAlphabet[] = $constraintAlphabet;
@@ -42,6 +50,7 @@ class PasswordGenerator
             $password[] = $this->pickRandomItemFromAlphabet($finalAlphabet);
         }
 
+        // We shuffle the array to make the password characters order unpredictable
         $this->secureShuffle($password);
 
         $password = implode("", $password);
