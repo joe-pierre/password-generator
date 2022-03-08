@@ -50,9 +50,10 @@ class PasswordGenerator
     }
 
         
-    // Source: https://github.com/lamansky/secure-shuffle/blob/master/src/functions.php
     private function secureShuffle (array $arr): void
     {
+        
+        // Source: https://github.com/lamansky/secure-shuffle/blob/master/src/functions.php
         $length = count($arr);
         
         for ($i = $length - 1; $i > 0; $i--) {
