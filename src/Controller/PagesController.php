@@ -10,28 +10,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PagesController extends AbstractController
 {
-    const PASSWORD_DEFAULT_LENGTH = 12;
-    const PASSWORD_MIN_LENGTH = 8;
-    const PASSWORD_MAX_LENGTH = 60;
-
     #[Route('/', name: 'app_home')]
     public function home(): Response
     {
-        return $this->render('pages/home.html.twig', [
-            'password_default_length' => PagesController::PASSWORD_DEFAULT_LENGTH,
-            'password_min_length' => PagesController::PASSWORD_MIN_LENGTH,
-            'password_max_length' => PagesController::PASSWORD_MAX_LENGTH,
+        return $this->render('pages/home.html.twig',[
+            'password_default_length' => $this->getParameter('app.password_default_length'),
+            'password_min_length' => $this->getParameter('app.password_min_length'),
+            'password_max_length' => $this->getParameter('app.password_max_length'),
         ]);
     }
 
     #[Route('/generate-password', name: 'app_generate_password')]
     public function generatePassword(Request $request, PasswordGenerator $passwordGenerator): Response
     {
-
         $length = $request->query->get('length');
 
         $password = $passwordGenerator->generate(
-            length: min(max($request->query->get('length'), PagesController::PASSWORD_MIN_LENGTH), PagesController::PASSWORD_MAX_LENGTH),
+            length: min(max($request->query->get('length'), $this->getParameter('app.password_min_length')), $this->getParameter('app.password_max_length')),
             uppercaseLetters: $request->query->getBoolean('uppercaseLetters'),
             digits: $request->query->getBoolean('digits'),
             specialCharacters: $request->query->getBoolean('specialCharacters'),
