@@ -20,14 +20,14 @@ class PasswordGenerator
         // Add lowercase letter chosed randomly
         $password = [$this->pickRandomAlphabet($lowercaseLettersAlphabet)];
 
-        $constraints = [
-            'uppercaseLetters' => $uppercaseLettersAlphabet,
-            'digits' => $digitsAlphabet,
-            'specialCharacters' => $specialCharactersAlphabet,
+        $constraintsMapping = [
+            [$uppercaseLetters, $uppercaseLettersAlphabet],
+            [$digits, $digitsAlphabet],
+            [$specialCharacters, $specialCharactersAlphabet],
         ];
 
-        foreach ($constraints as $constraintEnabled => $constraintAlphabet) {
-            if ($$constraintEnabled) {
+        foreach ($constraintsMapping as [$constraintEnabled, $constraintAlphabet]) {
+            if ($constraintEnabled) {
                 $finalAlphabet = array_merge($finalAlphabet, $constraintAlphabet);
 
                 $password[] = $this->pickRandomAlphabet($constraintAlphabet);
