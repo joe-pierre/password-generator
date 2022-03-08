@@ -19,28 +19,21 @@ class PasswordGenerator
 
         // Add lowercase letter chosed randomly
         $password = [$this->pickRandomAlphabet($lowercaseLettersAlphabet)];
-        
-        if ($uppercaseLetters) {
-            $finalAlphabet = array_merge($finalAlphabet, $uppercaseLettersAlphabet);
-            
-            // Add uppercase letter chosed randomly
-            $password[] = $this->pickRandomAlphabet($uppercaseLettersAlphabet);
+
+        $constraints = [
+            'uppercaseLetters' => $uppercaseLettersAlphabet,
+            'digits' => $digitsAlphabet,
+            'specialCharacters' => $specialCharactersAlphabet,
+        ];
+
+        foreach ($constraints as $constraintEnabled => $constraintAlphabet) {
+            if ($$constraintEnabled) {
+                $finalAlphabet = array_merge($finalAlphabet, $constraintAlphabet);
+
+                $password[] = $this->pickRandomAlphabet($constraintAlphabet);
+            }
         }
-        
-        if ($digits) {
-            $finalAlphabet = array_merge($finalAlphabet, $digitsAlphabet);
-            
-            // Add digit chosed randomly
-            $password[] = $this->pickRandomAlphabet($digitsAlphabet);
-        }
-        
-        if ($specialCharacters) {
-            $finalAlphabet = array_merge($finalAlphabet, $specialCharactersAlphabet);
-            
-            // Add special character letter chosed randomly
-            $password[] = $this->pickRandomAlphabet($specialCharactersAlphabet);
-        }
-        
+
         $numberOfCharactersRemaining = $length - count($password);
         
         for ($i=0; $i < $numberOfCharactersRemaining; $i++) { 
@@ -53,9 +46,11 @@ class PasswordGenerator
 
         return $password;
     }
+
         
     // Source: https://github.com/lamansky/secure-shuffle/blob/master/src/functions.php
-     private function secureShuffle (array $arr): void {
+    private function secureShuffle (array $arr): void
+    {
         $length = count($arr);
         
         for ($i = $length - 1; $i > 0; $i--) {
